@@ -3,6 +3,8 @@
 Class Usuario {
   /** Declare User Role Enum */
   public static $ROLES;
+  /** Declare Campus Enum*/
+  public static $CAMPUS;
 
   public static function init() {
     /** User Role Manual Pseudo-ENUMS */
@@ -19,6 +21,13 @@ Class Usuario {
       "AUXILIAR_CA" => 9,
       "AUXILIAR_POSGRADOS" => 10,
       "COORDINADOR_UA" => 11
+    ];
+
+    /** Campus Manual Pseudo-ENUMS */
+    self::$CAMPUS = (object) [
+      "MEXICALI" => 0,
+      "TIJUANA" => 1,
+      "ENSENADA" => 2
     ];
   }
 }
