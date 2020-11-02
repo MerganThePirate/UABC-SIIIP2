@@ -1,0 +1,24 @@
+version: '3.7'
+services:
+ postgres:
+  image: postgres:12.0-alpine
+  container_name: siip-postgres
+  working_dir: /data/postgres
+  volumes:
+   - ./postgresql-data:/var/lib/postgresql/data
+  environment:
+   POSTGRES_USER: pguser
+   POSTGRES_PASSWORD: pgwd
+   POSTGRES_DB: pgdb
+  
+ php:
+  image: 'php:7-apache'
+  container_name: siip-php
+  volumes:
+   - './www/:/var/www/html'
+  expose:
+   - 80
+  ports:
+   - '80:80'
+  links:
+   - postgres
