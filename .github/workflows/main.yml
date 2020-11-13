@@ -14,4 +14,4 @@ jobs:
       - name: Build the stack
         run: docker-compose up -d
       - name: e2e
-        run: behave tests/features
+        run: docker exec -ti siip-e2e "behave tests/features"
