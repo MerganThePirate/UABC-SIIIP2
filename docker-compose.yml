@@ -10,7 +10,11 @@ services:
    POSTGRES_USER: pguser
    POSTGRES_PASSWORD: pgwd
    POSTGRES_DB: pgdb
-  
+
+  e2e:
+    container_name: webapp-e2e
+    build: .
+
  php:
   image: 'php:7-apache'
   container_name: siip-php
@@ -22,4 +26,4 @@ services:
   ports:
    - '80:80'
   links:
-   - postgres
+   - postgres e2e
