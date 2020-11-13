@@ -1,9 +1,5 @@
 version: '3.7'
-services:
- e2e:
-    container_name: siip-e2e
-    build: .
-  
+services: 
  postgres:
   image: postgres:12.0-alpine
   container_name: siip-postgres
@@ -18,7 +14,6 @@ services:
  php:
   image: 'php:7-apache'
   container_name: siip-php
-  build: .
   volumes:
    - './www/:/var/www/html'
   expose:
