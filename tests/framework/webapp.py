@@ -1,7 +1,8 @@
-from selenium import webdriver
-from data.config import settings
 from urllib.parse import urljoin
-from selenium.webdriver.chrome.options import Options
+
+from data.config import settings
+from selenium import webdriver
+
 
 class WebApp:
     instance = None
@@ -13,9 +14,7 @@ class WebApp:
         return cls.instance
 
     def __init__(self):
-       options = Options()
-       options.headless = True
-       self.driver = webdriver.Chrome(chrome_options=options)
+       self.driver = webdriver.Chrome()
 
     def get_driver(self):
         return self.driver
@@ -24,12 +23,11 @@ class WebApp:
         self.driver.get(settings['url'])
 
     def goto_page(self, page):
-        self.driver.get(urljoin(settings['url'], page.lower()))
+        url = urljoin(settings['url'], page.lower())
+        self.driver.get(url)
 
     def verify_component_exists(self, component):
-        # Simple implementation
-        assert component in self.driver.find_element_by_tag_name('body').text, \
-            "Component {} not found on page".format(component)
+        self.driver.find_element_by_id(component)
 
 
 webapp = WebApp.get_instance()
