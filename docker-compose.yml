@@ -14,6 +14,7 @@ services:
  php:
   image: 'php:7-apache'
   container_name: siip-php
+  build: .
   volumes:
    - './www/:/var/www/html'
   expose:
