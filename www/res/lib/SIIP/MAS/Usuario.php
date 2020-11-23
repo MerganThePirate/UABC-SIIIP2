@@ -10,8 +10,16 @@ Class Usuario extends Handler {
 
   /** Get All Users */
   public static function getAllUsers() {
-    /** TODO SQL */
-    return null;
+    global $dbh;
+
+    $select = $dbh->prepare("SELECT * FROM users");
+    $select->execute();
+
+    $result = $select->fetchAll(PDO::FETCH_ASSOC);
+    $code = 200;
+
+    $json = json_encode($result);
+    return ["code" => $code, "data" => $json];
   }
 
   /** Get Users by Role */
@@ -22,19 +30,79 @@ Class Usuario extends Handler {
 
   /** Get User from ID */
   public static function getUser($user_id) {
-    /** TODO SQL */
-    return null;
+    global $dbh;
+
+    $select = $dbh->prepare("SELECT * FROM users WHERE id = :id");
+    $select->execute([":id" => $user_id]);
+
+    $result = $select->fetch(PDO::FETCH_ASSOC);
+    $code = empty($result)?404:200;
+
+    if (empty($result)) {
+      $code = 404;
+      $json = "{}";
+    } else {
+      $code = 200;
+      $json = json_encode($result);
+    }
+
+    return ["code" => $code, "data" => $json];
   }
 
   /** Add new User */
-  public static function postNewUser($name, $account, $password, $rol, $campus = null, $unidad = null) {
-    /** TODO SQL */
-    return null;
+  public static function postNewUser($name, $email, $role, $campus = null, $unit = null) {
+    global $dbh;
+
+    $insert = $dbh->prepare("INSERT INTO users(name, email, role, campus, unit) VALUES(:name, :email, :role, :campus, :unit)");
+    $insert->execute([
+      ":name" => $name,
+      ":email" => $email,
+      ":role" => $role,
+      ":campus" => empty($campus)?null:$campus,
+      ":unit" => empty($unit)?null:$unit
+    ]);
+
+    switch($insert->errorcode()) {
+      case 22007:
+        $code = 400;
+        break;
+      default:
+        $code = 201;
+    }
+
+    return ["code" => $code, "data" => "{}"];
   }
 
   /** Modify existing User */
-  public static function putUser($user_id, $options) {
-    /** TODO SQL */
+  public static function putUser($user_id, $name, $email, $role, $campus, $unit) {
+    $args = get_defined_vars();
+    unset($args["user_id"]);
+
+    global $dbh;
+
+    $columns = [];
+    $params = [];
+    foreach($args as $key => $value) {
+      if (!is_null($value)) {
+        $columns[] = "{$key} = :{$key}";
+        $params[":{$key}"] = empty($value)?null:$value;
+      }
+    }
+
+    $code = 400;
+    if (!empty($columns) && isset($user_id)) {
+      $query = "UPDATE users SET ".implode(", ", $columns)." WHERE id = :user_id";
+      $params[":user_id"] = $user_id;
+
+      $update = $dbh->prepare($query);
+      $update->execute($params);
+
+      $code = $update->errorcode() != 00000?:200;
+    }
+
+    return ["code" => $code, "data" => "{}"];
+  }
+
   public static function GET($options) {
     $user_id = $options["user_id"];
     if (is_numeric($user_id)) {
