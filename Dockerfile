@@ -4,4 +4,4 @@ RUN a2enmod rewrite
 
 RUN service apache2 restart
 
-ADD ./src /var/www/html
+ADD ./www /var/www/html
