@@ -1,6 +1,8 @@
 <?php
+require_once(dirname(__DIR__)."/Database.php");
+require_once(dirname(__DIR__)."/Handler.php");
 
-Class Usuario {
+Class Usuario extends Handler {
   /** Declare User Role Enum */
   public static $ROLES;
   /** Declare Campus Enum*/
@@ -33,7 +35,47 @@ Class Usuario {
   /** Modify existing User */
   public static function putUser($user_id, $options) {
     /** TODO SQL */
+  public static function GET($options) {
+    $user_id = $options["user_id"];
+    if (is_numeric($user_id)) {
+      /** /usuarios/ */
+      return self::getUser($user_id);
+    } else if ($user_id == "") {
+      /** /usuarios/n */
+      // Revisar que tenga permisos para revisar usuarios
+      return self::getAllUsers();
+    }
+  }
+
+  public static function POST($options) {
+    $user_id = $options["user_id"];
+    if (!is_numeric($user_id)) {
+      return self::postNewUser(
+        $_POST["name"],
+        $_POST["email"],
+        $_POST["role"],
+        $_POST["campus"],
+        $_POST["unit"]
+      );
+    }
     return null;
+  }
+
+  public static function PUT($a) {
+    global $_PUT;
+
+    return self::putUser(
+      $_PUT["user_id"]??null,
+      $_PUT["name"]??null,
+      $_PUT["email"]??null,
+      $_PUT["role"]??null,
+      $_PUT["campus"]??null,
+      $_PUT["unit"]??null
+    );
+  }
+
+  public static function DELETE($a) {
+    return ["code" => 501, "data" => "{}"];
   }
 
   public static function init() {
@@ -50,7 +92,8 @@ Class Usuario {
       "AUXILIAR_PRODEP" => 8,
       "AUXILIAR_CA" => 9,
       "AUXILIAR_POSGRADOS" => 10,
-      "COORDINADOR_UA" => 11
+      "COORDINADOR_UA" => 11,
+      "AUXILIAR_OPI" => 12
     ];
 
     /** Campus Manual Pseudo-ENUMS */
