@@ -23,7 +23,7 @@ jobs:
         run: docker-compose up -d
       - name: Build e2e stack
         run: sudo docker-compose -f tests/docker-compose.yml up -d
-      - name: Download python
+      - name: Install requirements by e2e
         run: pip install -r tests/requirements.txt
       - name: e2e
         run: behave tests/features
