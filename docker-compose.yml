@@ -17,6 +17,8 @@ services:
   build: .
   volumes:
    - './www/:/var/www/html'
+  environment:
+        - ALLOW_OVERRIDE=true
   expose:
    - 80
   ports:
