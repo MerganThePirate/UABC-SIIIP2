@@ -6,6 +6,8 @@ services:
   working_dir: /data/postgres
   volumes:
    - ./postgresql-data:/var/lib/postgresql/data
+  ports:
+      - "5432:5432"
   environment:
    POSTGRES_USER: siiip
    POSTGRES_PASSWORD: des.siiip.2020!
